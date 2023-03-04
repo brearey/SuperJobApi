@@ -16,7 +16,7 @@ class Repository
 
     private function db_connect() {
         $database_name = 'superjob';
-        $path = dirname($_SERVER['DOCUMENT_ROOT']) . '/superjob/api/';
+        $path = '../';
         if(!file_exists($path.$database_name . ".db")) {
             $db = new SQLite3($path.$database_name . '.db');
             $sql='CREATE TABLE users (
