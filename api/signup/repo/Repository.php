@@ -2,6 +2,7 @@
 
 namespace signup\repo;
 
+use api\Message;
 use SQLite3;
 
 class Repository
@@ -15,7 +16,7 @@ class Repository
 
     private function db_connect() {
         $database_name = 'superjob';
-        $path = dirname(__DIR__) . '/';
+        $path = dirname($_SERVER['DOCUMENT_ROOT']) . '/superjob/api/';
         if(!file_exists($path.$database_name . ".db")) {
             $db = new SQLite3($path.$database_name . '.db');
             $sql='CREATE TABLE users (
@@ -31,12 +32,13 @@ class Repository
     }
 
     public function add_user($token, $name) {
-
-        if ($this->get_user_by_token($token)) {
-
+        $db = self::$database;
+        // check by token exist
+        $message = $this->get_user_by_token($token);
+        if ($message->status) {
+            return new \api\Message(false, "Пользователь с таким токеном уже существует");
         }
 
-        $db = self::$database;
         $sql = "INSERT INTO users (token, name) VALUES (:token, :name)";
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':token', $token);
@@ -73,7 +75,7 @@ class Repository
         }
 
         if ($array) {
-            return $array[0];
+            return new \api\Message(true, $array[0]);
         } else {
             return new \api\Message(false, "Пользователь не найден. " . $db->lastErrorMsg());
         }

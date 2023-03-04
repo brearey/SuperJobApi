@@ -13,8 +13,7 @@ if (checkAppKey()) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $token = $_POST['token'];
         $name = $_POST['name'];
-        $repo->add_user($token, $name);
-        echo( json_encode(new Message(true, "Успех! Мы получили ваш токен: " . $token . ", " . $name . ". Регистрация прошла успешно.")) );
+        echo json_encode($repo->add_user($token, $name));
     } else {
         http_response_code(400);
         die(json_encode(new Message(false, "Требуется POST запрос")));
