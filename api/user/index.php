@@ -1,11 +1,11 @@
 <?php
 
-include_once ('../include/functions.php');
+include_once('../inc/functions.php');
 
-require_once('../include/Response.php');
+require_once('../inc/Response.php');
 require_once ('../repo/Repository.php');
 
-use include\Response;
+use inc\Response;
 use repo\Repository;
 
 header("Content-type: application/json; charset=utf-8");
@@ -20,8 +20,6 @@ if (checkAppKey()) {
         } else {
             echo (json_encode(new Response(true, $result->text)));
         }
-
-        //echo json_encode($repo->get_users());
     } else {
         http_response_code(400);
         die(json_encode(new Response(false, "Требуется GET запрос")));

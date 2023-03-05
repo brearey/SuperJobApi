@@ -1,8 +1,8 @@
 <?php
 
-require_once('../include/Response.php');
+require_once('../inc/Response.php');
 
-use include\Response;
+use inc\Response;
 
 function checkAppKey(): bool
 {

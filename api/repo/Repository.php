@@ -3,11 +3,11 @@
 namespace repo;
 
 use SQLite3;
-use include\Response;
+use inc\Response;
 
 class Repository
 {
-    private static SQLite3 $database;
+    private static $database;
 
     public function __construct()
     {
@@ -33,8 +33,8 @@ class Repository
     public function add_user($token, $name, $age): Response {
         $db = self::$database;
         // check by token exist
-        $message = $this->get_user_by_token($token);
-        if ($message->status) {
+        $response = $this->get_user_by_token($token);
+        if ($response->status) {
             return new Response(false, "Пользователь с таким токеном уже существует");
         }
 

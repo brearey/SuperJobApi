@@ -1,10 +1,10 @@
 <?php
 
-namespace include;
+namespace inc;
 class Response
 {
-    public string $status;
-    public string $text;
+    public $status;
+    public $text;
     public function __construct($status, $text)
     {
         $this->status = $status;
