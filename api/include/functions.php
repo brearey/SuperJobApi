@@ -10,6 +10,16 @@ function checkAppKey(): bool
     return $result;
 }
 
+function checkToken($token): bool
+{
+    $result = $_SERVER["HTTP_TOKEN"] === $token;
+    if (!$result) {
+        http_response_code(400);
+        echo json_encode(new Message(false, 'Неверный токен запроса'));
+    }
+    return $result;
+}
+
 function checkUserID($userid): bool
 {
     if ($userid == "12345") {
