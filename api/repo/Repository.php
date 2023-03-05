@@ -1,8 +1,7 @@
 <?php
 
-namespace signup\repo;
+namespace repo;
 
-use api\Message;
 use SQLite3;
 
 class Repository
