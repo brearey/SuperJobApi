@@ -19,7 +19,8 @@ if (checkAppKey()) {
         $data = json_decode($postData, true);
         $token = $data['token'];
         $name = $data['name'];
-        echo json_encode($repo->add_user($token, $name));
+        $age = $data['age'];
+        echo json_encode($repo->add_user($token, $name, $age));
     } else {
         http_response_code(400);
         die(json_encode(new Message(false, "Требуется POST запрос")));

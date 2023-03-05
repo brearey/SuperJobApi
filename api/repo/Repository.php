@@ -21,7 +21,8 @@ class Repository
             $sql='CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             token TEXT,
-            name TEXT
+            name TEXT,
+            age TEXT
         )';
             $db->query($sql);
         }else{
@@ -30,7 +31,7 @@ class Repository
         return $db;
     }
 
-    public function add_user($token, $name) {
+    public function add_user($token, $name, $age) {
         $db = self::$database;
         // check by token exist
         $message = $this->get_user_by_token($token);
@@ -38,10 +39,11 @@ class Repository
             return new \api\Message(false, "Пользователь с таким токеном уже существует");
         }
 
-        $sql = "INSERT INTO users (token, name) VALUES (:token, :name)";
+        $sql = "INSERT INTO users (token, name, age) VALUES (:token, :name, :age)";
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':token', $token);
         $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':age', $age);
         if ($stmt->execute()) {
             $stmt->close();
             return new \api\Message(true, "User has been created");
