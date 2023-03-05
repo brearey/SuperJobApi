@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="superjob.db" uuid="54d89ef7-6867-4449-9fa7-8dbf15d0a4e7">
+    <data-source source="LOCAL" name="superjob.db" uuid="483bd684-9815-49ba-807d-5525210c9b46">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>

@@ -3,21 +3,22 @@
 namespace repo;
 
 use SQLite3;
+use include\Response;
 
 class Repository
 {
-    private static $database;
+    private static SQLite3 $database;
 
     public function __construct()
     {
         self::$database = $this->db_connect();
     }
 
-    private function db_connect() {
+    private function db_connect(): SQLite3 {
         $database_name = 'superjob';
         $path = '../';
+        $db = new SQLite3($path.$database_name . '.db');
         if(!file_exists($path.$database_name . ".db")) {
-            $db = new SQLite3($path.$database_name . '.db');
             $sql='CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             token TEXT,
@@ -25,18 +26,16 @@ class Repository
             age TEXT
         )';
             $db->query($sql);
-        }else{
-            $db = new SQLite3($path.$database_name . '.db');
         }
         return $db;
     }
 
-    public function add_user($token, $name, $age) {
+    public function add_user($token, $name, $age): Response {
         $db = self::$database;
         // check by token exist
         $message = $this->get_user_by_token($token);
         if ($message->status) {
-            return new \api\Message(false, "Пользователь с таким токеном уже существует");
+            return new Response(false, "Пользователь с таким токеном уже существует");
         }
 
         $sql = "INSERT INTO users (token, name, age) VALUES (:token, :name, :age)";
@@ -46,14 +45,14 @@ class Repository
         $stmt->bindParam(':age', $age);
         if ($stmt->execute()) {
             $stmt->close();
-            return new \api\Message(true, "User has been created");
+            return new Response(true, "User has been created");
         } else {
             $stmt->close();
-            return new \api\Message(false, "Error creating user " . $db->lastErrorMsg());
+            return new Response(false, "Error creating user " . $db->lastErrorMsg());
         }
     }
 
-    public function get_users() {
+    public function get_users(): array {
         $db = self::$database;
         $sql = "SELECT * FROM users";
         $result = $db->query($sql);
@@ -65,7 +64,7 @@ class Repository
         return $array;
     }
 
-    public function get_user_by_token($token) {
+    public function get_user_by_token($token): Response {
         $db = self::$database;
         $sql = "SELECT * FROM users WHERE token = '".$token."'";
         $result = $db->query($sql);
@@ -76,9 +75,9 @@ class Repository
         }
 
         if ($array) {
-            return new \api\Message(true, $array[0]);
+            return new Response(true, $array[0]);
         } else {
-            return new \api\Message(false, "Пользователь не найден. " . $db->lastErrorMsg());
+            return new Response(false, "Пользователь не найден. " . $db->lastErrorMsg());
         }
     }
 }

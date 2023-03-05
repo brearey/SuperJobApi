@@ -1,10 +1,10 @@
 <?php
 
-namespace api;
-class Message
+namespace include;
+class Response
 {
-    public $status;
-    public $text;
+    public string $status;
+    public string $text;
     public function __construct($status, $text)
     {
         $this->status = $status;

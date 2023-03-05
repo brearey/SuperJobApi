@@ -2,10 +2,10 @@
 
 include_once ('../include/functions.php');
 
-require_once ('../Message.php');
+require_once('../include/Response.php');
 require_once ('../repo/Repository.php');
 
-use api\Message;
+use include\Response;
 use repo\Repository;
 
 header("Content-type: application/json; charset=utf-8");
@@ -23,6 +23,6 @@ if (checkAppKey()) {
         echo json_encode($repo->add_user($token, $name, $age));
     } else {
         http_response_code(400);
-        die(json_encode(new Message(false, "Требуется POST запрос")));
+        die(json_encode(new Response(false, "Требуется POST запрос")));
     }
 }
