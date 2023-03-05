@@ -11,8 +11,10 @@ $repo = new Repository();
 
 if (checkAppKey()) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $token = $_POST['token'];
-        $name = $_POST['name'];
+        $postData = file_get_contents('php://input');
+        $data = json_decode($postData, true);
+        $token = $data['token'];
+        $name = $data['name'];
         echo json_encode($repo->add_user($token, $name));
     } else {
         http_response_code(400);
