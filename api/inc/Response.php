@@ -4,10 +4,12 @@ namespace inc;
 class Response
 {
     public $status;
-    public $text;
-    public function __construct($status, $text)
+    public $user;
+    public $message;
+    public function __construct($status, $user, $message)
     {
         $this->status = $status;
-        $this->text = $text;
+        $this->user = $user;
+        $this->message = $message;
     }
 }

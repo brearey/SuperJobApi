@@ -15,13 +15,9 @@ $repo = new Repository();
 if (checkAppKey()) {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $result = $repo->get_user_by_token($_SERVER['HTTP_TOKEN']);
-        if (!$result->status) {
-            die(json_encode(new Response(false, $result->text)));
-        } else {
-            echo (json_encode(new Response(true, $result->text)));
-        }
+        echo(json_encode($result));
     } else {
         http_response_code(400);
-        die(json_encode(new Response(false, "Требуется GET запрос")));
+        die(json_encode(new Response(false, null, "GET required")));
     }
 }

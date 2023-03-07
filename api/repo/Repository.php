@@ -2,6 +2,10 @@
 
 namespace repo;
 
+require_once ('../inc/Response.php');
+require_once ('../inc/User.php');
+
+use inc\User;
 use SQLite3;
 use inc\Response;
 
@@ -35,7 +39,7 @@ class Repository
         // check by token exist
         $response = $this->get_user_by_token($token);
         if ($response->status) {
-            return new Response(false, "Пользователь с таким токеном уже существует");
+            return new Response(false, null, "Token already exists");
         }
 
         $sql = "INSERT INTO users (token, name, age) VALUES (:token, :name, :age)";
@@ -45,10 +49,10 @@ class Repository
         $stmt->bindParam(':age', $age);
         if ($stmt->execute()) {
             $stmt->close();
-            return new Response(true, "User has been created");
+            return new Response(true, null, "User has been created");
         } else {
             $stmt->close();
-            return new Response(false, "Error creating user " . $db->lastErrorMsg());
+            return new Response(false, null, "Error creating user " . $db->lastErrorMsg());
         }
     }
 
@@ -75,9 +79,10 @@ class Repository
         }
 
         if ($array) {
-            return new Response(true, $array[0]);
+            $user = new User($array[0]['id'], $array[0]['token'], $array[0]['name'], $array[0]['age']);
+            return new Response(true, $user, "Success");
         } else {
-            return new Response(false, "Пользователь не найден. " . $db->lastErrorMsg());
+            return new Response(false,null, "User is not exist. " . $db->lastErrorMsg());
         }
     }
 }

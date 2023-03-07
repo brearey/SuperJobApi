@@ -23,6 +23,6 @@ if (checkAppKey()) {
         echo json_encode($repo->add_user($token, $name, $age));
     } else {
         http_response_code(400);
-        die(json_encode(new Response(false, "Требуется POST запрос")));
+        die(json_encode(new Response(false, null, "POST required")));
     }
 }
