@@ -10,10 +10,7 @@
 header("Content-type: text/html; charset=utf-8");
 
 include_once(dirname(__FILE__).'/../SuperjobAPI.php');
-// ID app
-define("CLIENT_ID", 233); 
-// Secret key
-define("CLIENT_SECRET", "your_secret_here");
+include_once(dirname(__FILE__).'/../apikey.php.php');
 
 try 
 {

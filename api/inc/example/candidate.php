@@ -2,10 +2,7 @@
 header("Content-type: application/json; charset=utf-8");
 
 include_once(dirname(__FILE__).'/../SuperjobAPI.php');
-// ID app
-define("CLIENT_ID", 2177);
-// Secret key
-define("CLIENT_SECRET", "v3.r.137382191.af1d10152a938fbd7fc5ab20540aa4fc80573dc1.d6a8d4bf024beb2d13a082578a93a9f922b9a5b4");
+include_once(dirname(__FILE__).'/../apikey.php.php');
 
 
 try 
