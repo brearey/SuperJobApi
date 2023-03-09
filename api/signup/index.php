@@ -2,25 +2,25 @@
 
 include_once('../inc/functions.php');
 
+require_once ('../inc/Worker.php');
 require_once('../inc/Response.php');
-require_once ('../repo/Repository.php');
+require_once ('../repo/RepositoryWorker.php');
 
 use inc\Response;
-use repo\Repository;
+use inc\Worker;
+use repo\RepositoryWorker;
 
 header("Content-type: application/json; charset=utf-8");
 //header("Content-type: text/html; charset=utf-8");
 
-$repo = new Repository();
+$repo = new \repo\RepositoryWorker('superjob');
 
 if (checkAppKey()) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $postData = file_get_contents('php://input');
         $data = json_decode($postData, true);
-        $token = $data['token'];
-        $name = $data['name'];
-        $age = $data['age'];
-        echo json_encode($repo->add_user($token, $name, $age));
+        $worker = new Worker($data['token'], $data['name'], $data['age'], $data['town']);
+        echo json_encode($repo->add_worker($worker));
     } else {
         http_response_code(400);
         die(json_encode(new Response(false, null, "POST required")));
