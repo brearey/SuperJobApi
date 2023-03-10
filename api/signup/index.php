@@ -13,7 +13,7 @@ use repo\RepositoryWorker;
 header("Content-type: application/json; charset=utf-8");
 //header("Content-type: text/html; charset=utf-8");
 
-$repo = new \repo\RepositoryWorker('superjob');
+$repo = new \repo\RepositoryWorker('workers');
 
 if (checkAppKey()) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

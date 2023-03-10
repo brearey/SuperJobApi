@@ -12,7 +12,7 @@ use repo\RepositoryMessage;
 
 header("Content-type: application/json; charset=utf-8");
 
-$repo = new RepositoryMessage('superjob');
+$repo = new RepositoryMessage('messages');
 
 if (checkAppKey()) {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {

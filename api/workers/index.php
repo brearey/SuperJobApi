@@ -10,7 +10,7 @@ use repo\RepositoryWorker;
 
 header("Content-type: application/json; charset=utf-8");
 
-$repo = new RepositoryWorker('superjob');
+$repo = new RepositoryWorker('workers');
 
 if (checkAppKey()) {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
