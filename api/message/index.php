@@ -19,7 +19,10 @@ if (checkAppKey()) {
         $result = $repo->get_messages_by_sender($_GET['sender_name']);
         echo(json_encode($result));
     } else if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-        $result = $repo->add_message(new Message($_POST['sender_name'], $_POST['message_text']));
+        $postData = file_get_contents('php://input');
+        $data = json_decode($postData, true);
+        $message = new Message($data['sender_name'], $data['message_text']);
+        $result = $repo->add_message($message);
         echo(json_encode($result));
     }
 }
