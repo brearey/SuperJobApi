@@ -18,18 +18,19 @@ class RepositoryWorker
         self::$database = $this->db_connect($db_name);
     }
 
-    private function db_connect($db_name): SQLite3 {
+    private function db_connect($db_name) {
         $path = '../';
-        $db = new SQLite3($path.$db_name . '.db');
-        if(!file_exists($path.$db_name . ".db")) {
+        if(!file_exists($path.$db_name . '.db')) {
+            $db = new SQLite3($path.$db_name . '.db');
             $sql='CREATE TABLE worker (
             token TEXT NOT NULL,
             name TEXT NOT NULL,
-            age INTEGET NOT NULL,
+            age INTEGER NOT NULL,
             town TEXT NOT NULL
         )';
             $db->query($sql);
         }
+        $db = new SQLite3($path.$db_name . '.db');
         return $db;
     }
 
@@ -41,7 +42,7 @@ class RepositoryWorker
             return new Response(false, null, "Token already exists");
         }
 
-        $sql = "INSERT INTO worker (token, name, age, town) VALUES (:token, :name, :age. :town)";
+        $sql = "INSERT INTO worker (token, name, age, town) VALUES (:token, :name, :age, :town)";
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':token', $worker->token);
         $stmt->bindParam(':name', $worker->name);

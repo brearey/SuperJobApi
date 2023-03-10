@@ -21,8 +21,8 @@ class Repository
     private function db_connect(): SQLite3 {
         $database_name = 'superjob';
         $path = '../';
-        $db = new SQLite3($path.$database_name . '.db');
         if(!file_exists($path.$database_name . ".db")) {
+            $db = new SQLite3($path.$database_name . '.db');
             $sql='CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             token TEXT,
@@ -31,6 +31,7 @@ class Repository
         )';
             $db->query($sql);
         }
+        $db = new SQLite3($path.$database_name . '.db');
         return $db;
     }
 

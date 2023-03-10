@@ -10,14 +10,13 @@ use repo\RepositoryWorker;
 
 header("Content-type: application/json; charset=utf-8");
 
-$repo = new \repo\RepositoryWorker('superjob');
+$repo = new RepositoryWorker('superjob');
 
 if (checkAppKey()) {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $result = $repo->get_worker_by_token($_SERVER['HTTP_TOKEN']);
-        echo(json_encode($result));
+        echo json_encode($repo->get_workers());
     } else {
         http_response_code(400);
-        die(json_encode(new Response(false, null, "GET required")));
+        die(json_encode(new Response(false, "GET required")));
     }
 }
