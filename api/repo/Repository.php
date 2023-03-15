@@ -2,88 +2,88 @@
 
 namespace repo;
 
-require_once ('../inc/Response.php');
-require_once ('../inc/User.php');
+include_once ('../inc/Response.php');
+include_once ('../inc/Message.php');
 
-use inc\User;
-use SQLite3;
+use inc\Message;
 use inc\Response;
+use PDO;
+
+define('DB_NAME', 'superjob');
 
 class Repository
 {
-    private static $database;
+    private static PDO $database;
 
     public function __construct()
     {
-        self::$database = $this->db_connect();
+        $this->db_connect(DB_NAME);
     }
 
-    private function db_connect(): SQLite3 {
-        $database_name = 'superjob';
-        $path = '../';
-        if(!file_exists($path.$database_name . ".db")) {
-            $db = new SQLite3($path.$database_name . '.db');
-            $sql='CREATE TABLE users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            token TEXT,
-            name TEXT,
-            age TEXT
-        )';
-            $db->query($sql);
-        }
-        $db = new SQLite3($path.$database_name . '.db');
-        return $db;
-    }
+    public function addMessage(Message $message): Response
+    {
+        $sql = "INSERT INTO message (sender_name, message_text, sender_token, receiver_token) VALUES (:sender_name, :message_text, :sender_token, :receiver_token)";
+        $stmt = self::$database->prepare($sql);
+        $stmt->bindValue(':sender_name', $message->sender_name);
+        $stmt->bindValue(':message_text', $message->message_text);
+        $stmt->bindValue(':sender_token', $message->sender_token);
+        $stmt->bindValue(':receiver_token', $message->receiver_token);
 
-    public function add_user($token, $name, $age): Response {
-        $db = self::$database;
-        // check by token exist
-        $response = $this->get_user_by_token($token);
-        if ($response->status) {
-            return new Response(false, null, "Token already exists");
-        }
-
-        $sql = "INSERT INTO users (token, name, age) VALUES (:token, :name, :age)";
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':token', $token);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':age', $age);
         if ($stmt->execute()) {
-            $stmt->close();
-            return new Response(true, null, "User has been created");
+            http_response_code(200);
+            return new Response(true, null, "Message has been saved");
         } else {
-            $stmt->close();
-            return new Response(false, null, "Error creating user " . $db->lastErrorMsg());
+            http_response_code(400);
+            return new Response(false, null, "Error saving message");
         }
     }
 
-    public function get_users(): array {
-        $db = self::$database;
-        $sql = "SELECT * FROM users";
-        $result = $db->query($sql);
-        $array = array();
-        while($data = $result->fetchArray(SQLITE3_ASSOC))
-        {
-            $array[] = $data;
+    public function getMessagesByReceiver($receiver_token): array
+    {
+        $sql = "SELECT * FROM message WHERE receiver_token = '".$receiver_token."'";
+        $statement = self::$database->prepare($sql);
+        $statement->execute();
+
+        $messages = [];
+        while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
+            $messages[] = new Message($row['sender_name'],$row['message_text'],$row['sender_token'],$row['receiver_token']);
         }
-        return $array;
+        return $messages;
     }
 
-    public function get_user_by_token($token): Response {
-        $db = self::$database;
-        $sql = "SELECT * FROM users WHERE token = '".$token."'";
-        $result = $db->query($sql);
-        $array = array();
-        while($data = $result->fetchArray(SQLITE3_ASSOC))
-        {
-            $array[] = $data;
+    private function db_connect($db_name)
+    {
+        $path = '../';
+        $db_file = $path . $db_name . ".db";
+        if (!file_exists($db_file)) {
+            self::$database = new PDO("sqlite:" . $db_file);
+            $this->createMessageTable();
+            $this->createWorkerTable();
         }
+        self::$database = new PDO("sqlite:" . $db_file);
+    }
 
-        if ($array) {
-            $user = new User($array[0]['id'], $array[0]['token'], $array[0]['name'], $array[0]['age']);
-            return new Response(true, $user, "Success");
-        } else {
-            return new Response(false,null, "User is not exist. " . $db->lastErrorMsg());
-        }
+    private function createMessageTable(): void
+    {
+        $sql='CREATE TABLE message (
+            sender_name TEXT NOT NULL,
+            message_text TEXT NOT NULL,
+            sender_token TEXT NOT NULL,
+            receiver_token TEXT NOT NULL
+        )';
+
+        self::$database->exec($sql);
+    }
+
+    private function createWorkerTable(): void
+    {
+        $sql='CREATE TABLE worker (
+            token TEXT NOT NULL,
+            name TEXT NOT NULL,
+            age INTEGER NOT NULL,
+            town TEXT NOT NULL
+        )';
+
+        self::$database->exec($sql);
     }
 }
