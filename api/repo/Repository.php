@@ -2,8 +2,8 @@
 
 namespace repo;
 
-include_once ('../inc/Response.php');
-include_once ('../inc/Message.php');
+//require_once ('../inc/Response.php');
+//require_once ('../inc/Message.php');
 
 use inc\Message;
 use inc\Response;
