@@ -2,18 +2,18 @@
 
 namespace controllers;
 
+require_once (__DIR__ . '/../autoload.php');
+
 use inc\Message;
 use inc\Response;
 use repo\Repository;
 
-require_once ('../inc/Message.php');
-require_once ('../inc/Response.php');
-require_once ('../repo/Repository.php');
+header('Content-type: application/json; charset=utf-8');
 
 class MessageController
 {
     private static Repository $repository;
-    public function __construct($repository)
+    public function __construct(Repository $repository)
     {
         self::$repository = $repository;
     }
@@ -34,11 +34,11 @@ class MessageController
         }
     }
 
-    public static function getMessages(): void {
+    public static function getMessages($receiver_token): void {
         //Check empty
-        if (isset($_GET['receiver_token']))
+        if (isset($receiver_token))
         {
-            $result = self::$repository->getMessagesByReceiver($_GET['receiver_token']);
+            $result = self::$repository->getMessagesByReceiver($receiver_token);
             echo(json_encode($result));
         } else
         {

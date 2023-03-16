@@ -2,8 +2,7 @@
 
 namespace repo;
 
-//require_once ('../inc/Response.php');
-//require_once ('../inc/Message.php');
+require_once (__DIR__ . '/../autoload.php');
 
 use inc\Message;
 use inc\Response;
@@ -17,7 +16,19 @@ class Repository
 
     public function __construct()
     {
-        $this->db_connect(DB_NAME);
+        $this->db_connect();
+    }
+
+    private function db_connect(): void
+    {
+        $path = __DIR__ . '/../';
+        $db_file = $path . DB_NAME . ".db";
+        if (!file_exists($db_file)) {
+            self::$database = new PDO("sqlite:" . $db_file);
+            $this->createMessageTable();
+            $this->createWorkerTable();
+        }
+        self::$database = new PDO("sqlite:" . $db_file);
     }
 
     public function addMessage(Message $message): Response
@@ -49,18 +60,6 @@ class Repository
             $messages[] = new Message($row['sender_name'],$row['message_text'],$row['sender_token'],$row['receiver_token']);
         }
         return $messages;
-    }
-
-    private function db_connect($db_name)
-    {
-        $path = '../';
-        $db_file = $path . $db_name . ".db";
-        if (!file_exists($db_file)) {
-            self::$database = new PDO("sqlite:" . $db_file);
-            $this->createMessageTable();
-            $this->createWorkerTable();
-        }
-        self::$database = new PDO("sqlite:" . $db_file);
     }
 
     private function createMessageTable(): void

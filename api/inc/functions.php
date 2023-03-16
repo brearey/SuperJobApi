@@ -1,6 +1,6 @@
 <?php
 
-require_once('../inc/Response.php');
+require_once(__DIR__ . '/../inc/Response.php');
 
 use inc\Response;
 
