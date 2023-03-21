@@ -6,6 +6,7 @@ require_once (__DIR__ . '/../autoload.php');
 
 use inc\Message;
 use inc\Response;
+use inc\Worker;
 use PDO;
 
 define('DB_NAME', 'superjob');
@@ -60,6 +61,45 @@ class Repository
             $messages[] = new Message($row['sender_name'],$row['message_text'],$row['sender_token'],$row['receiver_token']);
         }
         return $messages;
+    }
+
+    //CRUD for workers
+    public function addWorker(Worker $worker): Response {
+        // check by token exist
+        $response = $this->getWorkerByToken($worker->token);
+        if ($response->status) {
+            return new Response(false, null, "Token already exists");
+        }
+
+        $sql = "INSERT INTO worker (token, name, age, town) VALUES (:token, :name, :age, :town)";
+        $stmt = self::$database->prepare($sql);
+        $stmt->bindParam(':token', $worker->token);
+        $stmt->bindParam(':name', $worker->name);
+        $stmt->bindParam(':age', $worker->age);
+        $stmt->bindParam(':town', $worker->town);
+        if (!$stmt->execute()) {
+            return new Response(false, null, "Error creating user ");
+        }
+        return new Response(true, null, "User has been created");
+    }
+
+    public function getWorkerByToken(String $token): Response {
+        $sql = "SELECT * FROM worker WHERE token = '".$token."'";
+
+        $statement = self::$database->prepare($sql);
+        $statement->execute();
+
+        $workers = [];
+        while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
+            $workers[] = new Worker($row['token'],$row['name'],$row['age'],$row['town']);
+        }
+
+        if ($workers) {
+            $worker = $workers[0];
+            return new Response(true, $worker, "Success");
+        } else {
+            return new Response(false,null, "User is not exist. ");
+        }
     }
 
     private function createMessageTable(): void
