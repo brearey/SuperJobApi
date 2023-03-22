@@ -78,7 +78,7 @@ class Repository
         $stmt->bindParam(':age', $worker->age);
         $stmt->bindParam(':town', $worker->town);
         if (!$stmt->execute()) {
-            return new Response(false, null, "Error creating user ");
+            return new Response(false, null, "Error creating user");
         }
         return new Response(true, null, "User has been created");
     }
@@ -98,7 +98,7 @@ class Repository
             $worker = $workers[0];
             return new Response(true, $worker, "Success");
         } else {
-            return new Response(false,null, "User is not exist. ");
+            return new Response(false,null, "User is not exist");
         }
     }
 
