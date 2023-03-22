@@ -25,6 +25,7 @@ switch ($endpoint) {
         {
             $messageController::addMessage();
         }
+        break;
     }
 
     case ('worker'): {
@@ -38,5 +39,10 @@ switch ($endpoint) {
         {
             $workerController::addWorker();
         }
+        break;
+    }
+
+    default: {
+        http_response_code(400);
     }
 }
