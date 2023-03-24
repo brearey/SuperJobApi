@@ -2,3 +2,4 @@
 /test.db
 /api/superjob.db
 /api/learn_iot.php
+/.phpunit.result.cache
