@@ -9,11 +9,14 @@ use inc\Town;
 use inc\TypeOfWork;
 use inc\Vacancy;
 use SuperjobAPI;
+use SuperjobAPIException;
 
 header("Content-type: application/json; charset=utf-8");
 
-include_once(dirname(__FILE__) . '/../inc/SuperjobAPI.php');
-include_once(dirname(__FILE__) . '/../inc/apikey.php');
+$file = __FILE__;
+$file = strtr($file, '\\', '/'); # Замена слешей
+include_once(dirname($file) . '/../inc/SuperjobAPI.php');
+include_once(dirname($file) . '/../inc/apikey.php');
 
 require_once(__DIR__ . '/../autoload.php');
 
@@ -24,7 +27,7 @@ class VacancyController
     public function __construct()
     {
         try {
-            $API = new SuperjobAPI(); //можно и так: SuperjobAPI::instance();
+            $API = new SuperjobAPI();
             $API->setSecretKey(CLIENT_SECRET);
 //            $vacancies = $API->vacancies(array('keyword' => 'php', 'town' => 4, 'page' => 1, 'count' => 5));
             $vacancies = $API->vacancies(array('count' => 10, 'page' => 1));
@@ -41,6 +44,7 @@ class VacancyController
     private function toVacancy(array $arr):array {
         $result = [];
         foreach ($arr as $vacancy) {
+
             $result[] = new Vacancy(
                 $vacancy['payment_from'],
                 $vacancy['payment_to'],
