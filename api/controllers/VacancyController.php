@@ -2,6 +2,11 @@
 
 namespace controllers;
 
+use inc\Education;
+use inc\Experience;
+use inc\PlaceOfWork;
+use inc\Town;
+use inc\TypeOfWork;
 use inc\Vacancy;
 use SuperjobAPI;
 
@@ -22,9 +27,7 @@ class VacancyController
             $API = new SuperjobAPI(); //можно и так: SuperjobAPI::instance();
             $API->setSecretKey(CLIENT_SECRET);
 //            $vacancies = $API->vacancies(array('keyword' => 'php', 'town' => 4, 'page' => 1, 'count' => 5));
-            $vacancies = $API->vacancies(array('count' => 3));
-
-//            $canEditOfFirstVacancy = $vacancies['objects'][0]['canEdit'];
+            $vacancies = $API->vacancies(array('count' => 10, 'page' => 1));
             $only_vacancies = $this->toVacancy($vacancies['objects']);
 
             echo(json_encode($only_vacancies));
@@ -44,12 +47,12 @@ class VacancyController
                 $vacancy['profession'],
                 $vacancy['work'],
                 $vacancy['candidat'],
-                $vacancy['type_of_work'],
-                $vacancy['place_of_work'],
-                $vacancy['education'],
-                $vacancy['experience'],
+                new TypeOfWork($vacancy['type_of_work']['id'], $vacancy['type_of_work']['title']),
+                new PlaceOfWork($vacancy['place_of_work']['id'], $vacancy['place_of_work']['title']),
+                new Education($vacancy['education']['id'], $vacancy['education']['title']),
+                new Experience($vacancy['experience']['id'], $vacancy['experience']['title']),
                 $vacancy['catalogues'],
-                $vacancy['town'],
+                new Town($vacancy['town']['id'], $vacancy['town']['title'], $vacancy['town']['declension'], $vacancy['town']['genitive']),
                 $vacancy['client_logo'],
                 $vacancy['age_from'],
                 $vacancy['age_to'],
