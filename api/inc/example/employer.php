@@ -10,7 +10,7 @@
 header("Content-type: text/html; charset=utf-8");
 
 include_once(dirname(__FILE__).'/../SuperjobAPI.php');
-include_once(dirname(__FILE__).'/../apikey.php.php');
+include_once(dirname(__FILE__).'/../apikey.php');
 
 try 
 {

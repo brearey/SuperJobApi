@@ -4,6 +4,7 @@ require_once (__DIR__ . '/autoload.php');
 require_once ('inc/functions.php');
 
 use controllers\MessageController;
+use controllers\VacancyController;
 use controllers\WorkerController;
 use repo\Repository;
 
@@ -38,6 +39,18 @@ switch ($endpoint) {
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST')
         {
             $workerController::addWorker();
+        }
+        break;
+    }
+
+    case ('vacancy'): {
+        $vacancyController = new VacancyController();
+        if ($_SERVER['REQUEST_METHOD'] === 'GET')
+        {
+
+        } else if ($_SERVER['REQUEST_METHOD'] === 'POST')
+        {
+
         }
         break;
     }
