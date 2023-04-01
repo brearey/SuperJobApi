@@ -24,21 +24,22 @@ header('Content-type: application/json; charset=utf-8');
 
 class VacancyController
 {
+    private SuperjobAPI $API;
     public function __construct()
     {
         try {
-            $API = new SuperjobAPI();
-            $API->setSecretKey(CLIENT_SECRET);
-//            $vacancies = $API->vacancies(array('keyword' => 'php', 'town' => 4, 'page' => 1, 'count' => 5));
-            $vacancies = $API->vacancies(array('count' => 10, 'page' => 1));
-            $only_vacancies = $this->toVacancy($vacancies['objects']);
-
-            echo(json_encode($only_vacancies));
-        } catch (SuperjobAPIException $e)
-        {
+            $this->API = new SuperjobAPI();
+            $this->API->setSecretKey(CLIENT_SECRET);
+        } catch (SuperjobAPIException $e) {
             $error = $e->getMessage();
             die(json_encode($error));
         }
+    }
+
+    public function getAllVacancyByPage(int $page):array {
+//        $vacancies = $API->vacancies(array('keyword' => 'php', 'town' => 4, 'page' => 1, 'count' => 5));
+        $vacancies = $this->API->vacancies(array('count' => 10, 'page' => $page));
+        return $this->toVacancy($vacancies['objects']);
     }
 
     private function toVacancy(array $arr):array {
