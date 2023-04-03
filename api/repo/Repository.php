@@ -139,7 +139,7 @@ class Repository
             $worker = $employers[0];
             return new Response(true, $worker, "Success");
         } else {
-            return new Response(false,null, "Worker is not exist");
+            return new Response(false,null, "Employer is not exist");
         }
     }
 
