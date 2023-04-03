@@ -3,6 +3,7 @@
 require_once (__DIR__ . '/autoload.php');
 require_once ('inc/functions.php');
 
+use controllers\EmployerController;
 use controllers\MessageController;
 use controllers\VacancyController;
 use controllers\WorkerController;
@@ -39,6 +40,19 @@ switch ($endpoint) {
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST')
         {
             $workerController::addWorker();
+        }
+        break;
+    }
+
+    case ('employer'): {
+        $employerController = new EmployerController($repository);
+        if ($_SERVER['REQUEST_METHOD'] === 'GET')
+        {
+            $token = $url[1];
+            $employerController::getEmployerByToken($token);
+        } else if ($_SERVER['REQUEST_METHOD'] === 'POST')
+        {
+            $employerController::addEmployer();
         }
         break;
     }
