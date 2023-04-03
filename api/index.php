@@ -47,10 +47,10 @@ switch ($endpoint) {
         $vacancyController = new VacancyController();
         if ($_SERVER['REQUEST_METHOD'] === 'GET')
         {
-            if (isset($url[1])) {
+            if (!empty($url[1])) {
                 $page = intval($url[1]);
             } else {
-                $page = intval($url[1]);
+                $page = 1;
             }
             echo json_encode($vacancyController->getAllVacancyByPage($page));
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST')

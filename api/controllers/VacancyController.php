@@ -2,6 +2,8 @@
 
 namespace controllers;
 
+session_start(['cookie_lifetime' => 60,]); // Время сессии 10 минут
+
 use inc\Education;
 use inc\Experience;
 use inc\PlaceOfWork;
@@ -25,6 +27,7 @@ header('Content-type: application/json; charset=utf-8');
 class VacancyController
 {
     private SuperjobAPI $API;
+
     public function __construct()
     {
         try {
@@ -36,13 +39,24 @@ class VacancyController
         }
     }
 
-    public function getAllVacancyByPage(int $page):array {
+    public function getAllVacancyByPage(int $page): array
+    {
 //        $vacancies = $API->vacancies(array('keyword' => 'php', 'town' => 4, 'page' => 1, 'count' => 5));
         $vacancies = $this->API->vacancies(array('count' => 10, 'page' => $page));
-        return $this->toVacancy($vacancies['objects']);
+        $_SESSION['is_more'] = $vacancies['more'];
+        if ($_SESSION['is_more']) {
+            return $this->toVacancy($vacancies['objects']);
+        } else {
+            return ["we not have more vacancies. Team AREA"];
+        }
     }
 
-    private function toVacancy(array $arr):array {
+    public function getTotal():int {
+        return $this->API->vacancies(array('count' => 1, 'page' => 1))['total'];
+    }
+
+    private function toVacancy(array $arr): array
+    {
         $result = [];
         foreach ($arr as $vacancy) {
 
