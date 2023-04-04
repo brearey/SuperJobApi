@@ -4,7 +4,7 @@ info:
   description: Документация Super Job API
   version: 1.0.0
 servers:
-  - url: 'https://xn--h1aafpog.xn--90ahbflhjgobv0ae.xn--p1ai/superjob/api/'
+  - url: 'https://xn--h1aafpog.xn--90ahbflhjgobv0ae.xn--p1ai/superjob/api'
     description: Beget release server
 paths:
   /worker/{token}:
@@ -21,6 +21,12 @@ paths:
           schema:
             type: string
           example: marvel
+        - in: header
+          name: appkey
+          schema:
+            type: integer
+            example: 0000
+          required: true
       responses:
         '200':
           description: Успешное получение соискателя по токену
@@ -28,6 +34,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Response"
+    post:
+      summary: Метод добавления соискателя
+      tags:
+        - Соискатель
+      operationId: addWorker
+      parameters:
+        - in: header
+          name: appkey
+          schema:
+            type: integer
+            example: 0000
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Worker"
+      responses:
+        '200':
+          description: Успешное добавление соискателя
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseAddWorker"
 
 
 components:
@@ -39,12 +70,21 @@ components:
           type: boolean
           example: true
         content:
-          type: object
-          example:
-            $ref: "#/components/schemas/Worker"
+          $ref: "#/components/schemas/Worker"
         message:
           type: string
           example: Success
+    ResponseAddWorker:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        content:
+          example: null
+        message:
+          type: string
+          example: Worker has been created
     Worker:
       type: object
       properties:
