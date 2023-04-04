@@ -1,0 +1,22 @@
+openapi: 3.0.3
+info:
+  title: Super Job API
+  description: Документация Super Job API
+  version: 1.0.0
+servers:
+  - url: 'https://xn--h1aafpog.xn--90ahbflhjgobv0ae.xn--p1ai/superjob/api/'
+    description: Beget release server
+paths:
+  /worker/{token}:
+    get:
+      summary: Метод получения соискателя по токену
+      tags:
+        - Соискатель
+      operationId: getWorkerByToken
+      responses:
+        '200':
+          description: Успешное получение соискателя по токену
+          content:
+            application/json:
+
+
