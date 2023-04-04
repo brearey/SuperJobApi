@@ -13,10 +13,54 @@ paths:
       tags:
         - Соискатель
       operationId: getWorkerByToken
+      parameters:
+        - name: token
+          in: path
+          required: false
+          description: Токен соискателя
+          schema:
+            type: string
+          example: marvel
       responses:
         '200':
           description: Успешное получение соискателя по токену
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
 
 
+components:
+  schemas:
+    Response:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        content:
+          type: object
+          example:
+            $ref: "#/components/schemas/Worker"
+        message:
+          type: string
+          example: Success
+    Worker:
+      type: object
+      properties:
+        token:
+          type: string
+          example: marvel
+          description: Токен соискателя
+        name:
+          type: string
+          example: Evgeny
+          description: Имя соискателя
+        age:
+          type: string
+          example: 34
+          description: Возраст
+        town:
+          type: string
+          example: Yakutsk
+          description: Город, населенный пункт проживания
