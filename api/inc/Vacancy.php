@@ -4,6 +4,7 @@ namespace inc;
 
 class Vacancy
 {
+    public int $id;
     public int $payment_from;
     public int $payment_to;
     public string $profession;
@@ -23,6 +24,7 @@ class Vacancy
     public ?string $phone;
 
     /**
+     * @param int $id
      * @param int $payment_from
      * @param int $payment_to
      * @param string $profession
@@ -41,8 +43,9 @@ class Vacancy
      * @param string|null $firm_activity
      * @param string|null $phone
      */
-    public function __construct(int $payment_from, int $payment_to, string $profession, ?string $work, string $candidat, ?TypeOfWork $type_of_work, ?PlaceOfWork $place_of_work, ?Education $education, Experience $experience, ?array $catalogues, ?Town $town, ?string $client_logo, int $age_from, int $age_to, ?string $firm_name, ?string $firm_activity, ?string $phone)
+    public function __construct(int $id, int $payment_from, int $payment_to, string $profession, ?string $work, string $candidat, ?TypeOfWork $type_of_work, ?PlaceOfWork $place_of_work, ?Education $education, Experience $experience, ?array $catalogues, ?Town $town, ?string $client_logo, int $age_from, int $age_to, ?string $firm_name, ?string $firm_activity, ?string $phone)
     {
+        $this->id = $id;
         $this->payment_from = $payment_from;
         $this->payment_to = $payment_to;
         $this->profession = $profession;
@@ -61,5 +64,4 @@ class Vacancy
         $this->firm_activity = $firm_activity;
         $this->phone = $phone;
     }
-
 }

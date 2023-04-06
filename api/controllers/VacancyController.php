@@ -61,6 +61,7 @@ class VacancyController
         foreach ($arr as $vacancy) {
 
             $result[] = new Vacancy(
+                $vacancy['id'],
                 $vacancy['payment_from'],
                 $vacancy['payment_to'],
                 $vacancy['profession'],
