@@ -11,10 +11,10 @@
 """
 Usage:
 
-    python swagger-yaml-to-html.py < /../../docs.yaml > docs.html
+    python swagger-yaml-to-html.py < /docs.yaml > docs.html
 
 """
-import yaml, json, sys
+import yaml, json, sys, io
 
 TEMPLATE = """
 <!DOCTYPE html>
@@ -50,6 +50,7 @@ TEMPLATE = """
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.24.2/swagger-ui-bundle.js"> </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.24.2/swagger-ui-standalone-preset.js"> </script>
+
 <script>
 window.onload = function() {
 
@@ -71,12 +72,16 @@ window.onload = function() {
   })
 
   window.ui = ui
+  var elements = document.getElementsByClassName("topbar");
+  while(elements.length > 0){
+      elements[0].parentNode.removeChild(elements[0]);
+  }
 }
 </script>
 </body>
 
 </html>
 """
-
-spec = yaml.load(sys.stdin, Loader=yaml.FullLoader)
+input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
+spec = yaml.load(input_stream, Loader=yaml.FullLoader)
 sys.stdout.write(TEMPLATE % json.dumps(spec))
