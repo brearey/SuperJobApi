@@ -145,26 +145,102 @@ class Repository
         }
     }
 
-    private function addVacancies(ArrayObject $vacancies):void {
+    public function addVacancies(Array $vacancies):void {
+        $this->clearTable('vacancy');
         foreach ($vacancies as $vacancy) {
-            $sql = "INSERT INTO employer (
-                token,
-                company_name,
-                town,
-                full_name,
-                photo_uri
+            $sql = "INSERT INTO vacancy (
+                id,
+                payment_from,
+                payment_to,
+                profession,
+                work,
+                candidat,
+                type_of_work__id,
+                type_of_work__title,
+                place_of_work__id,
+                place_of_work__title,
+                education__id,
+                education__title,
+                experience__id,
+                experience_title,
+                catalogues,
+                town__id,
+                town__title,
+                town__declension,
+                town__genitive,
+                client_logo,
+                age_from,
+                age_to,
+                firm_name,
+                firm_activity,
+                phone
                 )
                 VALUES (
-                :token,
-                :company_name,
-                :town, :full_name,
-                :photo_uri
+                :id,
+                :payment_from,
+                :payment_to,
+                :profession,
+                :work,
+                :candidat,
+                :type_of_work__id,
+                :type_of_work__title,
+                :place_of_work__id,
+                :place_of_work__title,
+                :education__id,
+                :education__title,
+                :experience__id,
+                :experience_title,
+                :catalogues,
+                :town__id,
+                :town__title,
+                :town__declension,
+                :town__genitive,
+                :client_logo,
+                :age_from,
+                :age_to,
+                :firm_name,
+                :firm_activity,
+                :phone
                 )";
+                $catalogues = json_encode($vacancy->catalogues);
+                $stmt = self::$database->prepare($sql);
+                $stmt->bindParam(':id', $vacancy->id);
+                $stmt->bindParam(':payment_from', $vacancy->payment_from);
+                $stmt->bindParam(':payment_to', $vacancy->payment_to);
+                $stmt->bindParam(':profession', $vacancy->profession);
+                $stmt->bindParam(':work', $vacancy->work);
+                $stmt->bindParam(':candidat', $vacancy->candidat);
+                $stmt->bindParam(':type_of_work__id', $vacancy->type_of_work->id);
+                $stmt->bindParam(':type_of_work__title', $vacancy->type_of_work->title);
+                $stmt->bindParam(':place_of_work__id', $vacancy->place_of_work->id);
+                $stmt->bindParam(':place_of_work__title', $vacancy->place_of_work->title);
+                $stmt->bindParam(':education__id', $vacancy->education->id);
+                $stmt->bindParam(':education__title', $vacancy->education->title);
+                $stmt->bindParam(':experience__id', $vacancy->experience->id);
+                $stmt->bindParam(':experience_title', $vacancy->experience->title);
+                $stmt->bindParam(':catalogues', $catalogues);
+                $stmt->bindParam(':town__id', $vacancy->town->id);
+                $stmt->bindParam(':town__title', $vacancy->town->title);
+                $stmt->bindParam(':town__declension', $vacancy->town->declension);
+                $stmt->bindParam(':town__genitive', $vacancy->town->genitive);
+                $stmt->bindParam(':client_logo', $vacancy->client_logo);
+                $stmt->bindParam(':age_from', $vacancy->age_from);
+                $stmt->bindParam(':age_to', $vacancy->age_to);
+                $stmt->bindParam(':firm_name', $vacancy->firm_name);
+                $stmt->bindParam(':firm_activity', $vacancy->firm_activity);
+                $stmt->bindParam(':phone', $vacancy->phone);
+                $stmt->execute();
         }
     }
 
+    public function clearTable(string $tableName) {
+        $sql = 'DELETE FROM '. $tableName.' ';
+        $stmt = self::$database->prepare($sql);
+        $stmt->execute();
+    }
+
     private function createVacancyTable():void {
-        $sql = 'CREATE TABLE message (
+        $sql = 'CREATE TABLE vacancy (
             id INTEGER NOT NULL,
             payment_from INTEGER NOT NULL,
             payment_to INTEGER NOT NULL,
@@ -196,7 +272,7 @@ class Repository
             age_to INTEGER NOT NULL,
             firm_name TEXT,
             firm_activity TEXT,
-            phone TEXT,
+            phone TEXT
         )';
         self::$database->exec($sql);
     }

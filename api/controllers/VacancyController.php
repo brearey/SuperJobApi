@@ -10,6 +10,7 @@ use inc\PlaceOfWork;
 use inc\Town;
 use inc\TypeOfWork;
 use inc\Vacancy;
+use repo\Repository;
 use SuperjobAPI;
 use SuperjobAPIException;
 
@@ -27,6 +28,7 @@ header('Content-type: application/json; charset=utf-8');
 class VacancyController
 {
     private SuperjobAPI $API;
+    private Repository $repository;
 
     public function __construct()
     {
@@ -37,6 +39,8 @@ class VacancyController
             $error = $e->getMessage();
             die(json_encode($error));
         }
+
+        $this->repository = new Repository();
     }
 
     public function getAllVacancyByPage(int $page): array
@@ -49,6 +53,10 @@ class VacancyController
         } else {
             return ["we not have more vacancies. Team AREA"];
         }
+    }
+
+    public function saveVacanciesInDatabase() {
+        $this->repository->addVacancies($this->getAllVacancyByPage(1));
     }
 
     public function getTotal():int {
