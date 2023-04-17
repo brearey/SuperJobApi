@@ -4,6 +4,7 @@ namespace repo;
 
 require_once (__DIR__ . '/../autoload.php');
 
+use ArrayObject;
 use inc\Employer;
 use inc\Message;
 use inc\Response;
@@ -30,6 +31,7 @@ class Repository
             $this->createMessageTable();
             $this->createWorkerTable();
             $this->createEmployerTable();
+            $this->createVacancyTable();
         }
         self::$database = new PDO("sqlite:" . $db_file);
     }
@@ -141,6 +143,62 @@ class Repository
         } else {
             return new Response(false,null, "Employer is not exist");
         }
+    }
+
+    private function addVacancies(ArrayObject $vacancies):void {
+        foreach ($vacancies as $vacancy) {
+            $sql = "INSERT INTO employer (
+                token,
+                company_name,
+                town,
+                full_name,
+                photo_uri
+                )
+                VALUES (
+                :token,
+                :company_name,
+                :town, :full_name,
+                :photo_uri
+                )";
+        }
+    }
+
+    private function createVacancyTable():void {
+        $sql = 'CREATE TABLE message (
+            id INTEGER NOT NULL,
+            payment_from INTEGER NOT NULL,
+            payment_to INTEGER NOT NULL,
+            profession TEXT NOT NULL,
+            work TEXT,
+            candidat TEXT NOT NULL,
+
+            type_of_work__id INTEGER,
+            type_of_work__title TEXT,
+
+            place_of_work__id INTEGER,
+            place_of_work__title TEXT,
+
+            education__id INTEGER,
+            education__title TEXT,
+
+            experience__id INTEGER NOT NULL,
+            experience_title TEXT NOT NULL,
+
+            catalogues TEXT,
+
+            town__id INTEGER,
+            town__title TEXT,
+            town__declension TEXT,
+            town__genitive TEXT,
+
+            client_logo TEXT,
+            age_from INTEGER NOT NULL,
+            age_to INTEGER NOT NULL,
+            firm_name TEXT,
+            firm_activity TEXT,
+            phone TEXT,
+        )';
+        self::$database->exec($sql);
     }
 
     private function createMessageTable(): void
