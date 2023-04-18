@@ -146,7 +146,6 @@ class Repository
     }
 
     public function addVacancies(Array $vacancies):void {
-        $this->clearTable('vacancy');
         foreach ($vacancies as $vacancy) {
             $sql = "INSERT INTO vacancy (
                 id,
