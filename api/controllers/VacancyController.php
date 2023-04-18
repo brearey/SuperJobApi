@@ -56,7 +56,14 @@ class VacancyController
     }
 
     public function saveVacanciesInDatabase() {
-        $this->repository->addVacancies($this->getAllVacancyByPage(1));
+        $this->repository->clearTable("vacancy");
+
+        $pre_vacancies = $this->API->vacancies(array('count' => 4000));
+        while ($pre_vacancies['more']) {
+            $vacancies = $this->toVacancy($pre_vacancies['objects']);
+            $this->repository->addVacancies( $vacancies );
+        }
+        
     }
 
     public function getTotal():int {
